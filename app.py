@@ -12,8 +12,8 @@ from langchain_community.llms import Ollama
 def main():
     print("--- AmbedkarGPT Initialization ---")
 
-    # 1. Load the provided text file [cite: 8]
-    # Loading the specific speech excerpt provided in the data section [cite: 25-37]
+    # 1. Load the provided text file 
+    #
     try:
         loader = TextLoader("./speech.txt", encoding='utf-8') # Added encoding for safety
         documents = loader.load()
@@ -22,8 +22,7 @@ def main():
         print(f"[-] Error loading file: {e}")
         return
 
-    # 2. Split the text into manageable chunks [cite: 9]
-    # Splitting text to ensure it fits within context windows
+    # 2. Split the text into manageable chunks 
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
         chunk_overlap=50
@@ -31,15 +30,12 @@ def main():
     texts = text_splitter.split_documents(documents)
     print(f"[+] Text split into {len(texts)} chunks")
 
-    # 3. Create Embeddings and store in local vector store [cite: 10]
     print("[*] Creating embeddings and vector store (this may take a moment)...")
     
-    # Requirement: Use HuggingFaceEmbeddings with sentence-transformers/all-MiniLM-L6-v2 
-    # This ensures no API keys or costs are incurred.
+    # Use HuggingFaceEmbeddings with sentence-transformers/all-MiniLM-L6-v2 
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     
-    # Requirement: Use ChromaDB as the vector store 
-    # Persisting data locally as requested.
+    # Use ChromaDB as the vector store 
     db = Chroma.from_documents(
         documents=texts, 
         embedding=embeddings,
@@ -47,10 +43,9 @@ def main():
     )
     print("[+] Vector store created successfully")
 
-    # 4 & 5. Retrieve relevant chunks and generate answer [cite: 11, 12]
+  
     
-    # Requirement: Use Ollama with Mistral 7B 
-    # Operating 100% free with no accounts or API keys.
+    # Use Ollama with Mistral 7B 
     llm = Ollama(model="mistral")
 
     # Setting up the RetrievalQA chain to feed retrieved context to the LLM
@@ -64,8 +59,7 @@ def main():
     print("\n--- System Ready! Ask a question based on the speech. ---")
     print("(Type 'exit' or 'quit' to stop)")
 
-    # Interactive Loop for the command-line Q&A system [cite: 4]
-    while True:
+    # Interactive Loop for the command-line Q&A system
         user_query = input("\nYour Question: ")
         
         if user_query.lower() in ['exit', 'quit']:
@@ -77,7 +71,7 @@ def main():
 
         print("Thinking...")
         try:
-            # Generate answer based solely on the content [cite: 6, 12]
+            # Generate answer based solely on the content 
             response = qa_chain.invoke({"query": user_query})
             print(f"\nAnswer: {response['result']}")
         except Exception as e:
