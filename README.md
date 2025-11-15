@@ -35,6 +35,9 @@ The system is fully local, requires no API keys, and uses only free and open-sou
 
 ## Requirements (As Specified in the Assignment PDF)
 
+### Backend 
+    Flask
+
 ### Framework
     LangChain
 
@@ -120,5 +123,6 @@ H --> I[Generate Answer]
 I --> J[Display Answer in Terminal]
 
 J --> F
+
 
 
