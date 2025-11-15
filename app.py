@@ -13,7 +13,6 @@ def main():
     print("--- AmbedkarGPT Initialization ---")
 
     # 1. Load the provided text file 
-    #
     try:
         loader = TextLoader("./speech.txt", encoding='utf-8') # Added encoding for safety
         documents = loader.load()
